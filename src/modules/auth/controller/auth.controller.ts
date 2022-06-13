@@ -1,22 +1,28 @@
-import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
+import { Controller, Post, HttpStatus, HttpCode, Body } from '@nestjs/common';
 import { AuthService } from '../service/auth.service';
-import { CreateUserDTO } from '../../../dto/createUser.dto';
-import { AuthUserDTO } from '../../../dto/authUser.dto';
-import { AuthGuard } from '@nestjs/passport';
+import { ExistingUserDTO } from '../../../interfaces/ExistingUser.dto';
+import { CreateUserDTO } from '../../../interfaces/CreateUser.dto';
+import { UserDetails } from '../../../types/UserDetails.type';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
-  @Post('create')
-  @HttpCode(201)
-  createUser(@Body() createUserDTO: CreateUserDTO) {
-    return this.authService.create(createUserDTO);
+  @Post('register')
+  @HttpCode(HttpStatus.CREATED)
+  register(@Body() user: CreateUserDTO): Promise<UserDetails | null> {
+    return this.authService.register(user);
   }
 
-  @UseGuards(AuthGuard('local'))
   @Post('login')
-  login(@Body() authUserDTO: AuthUserDTO) {
-    return this.authService.login(authUserDTO);
+  @HttpCode(HttpStatus.OK)
+  login(@Body() user: ExistingUserDTO): Promise<{ token: string } | null> {
+    return this.authService.login(user);
+  }
+
+  @Post('verify')
+  @HttpCode(HttpStatus.OK)
+  verify(@Body() payload: { jwt: string }) {
+    return this.authService.verifyJwt(payload.jwt);
   }
 }

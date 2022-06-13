@@ -1,28 +1,28 @@
-import { Module } from '@nestjs/common';
-import { AuthController } from './modules/auth/controller/auth.controller';
-import { AuthService } from './modules/auth/service/auth.service';
-import { MongooseModule } from '@nestjs/mongoose';
-import { UserSchema } from './models/User.schema';
-import { AuthModule } from './modules/auth/auth.module';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
+import { MongooseModule } from '@nestjs/mongoose';
+import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { LoggerMiddleware } from './middleware/logger.middleware';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (config: ConfigService) => ({
-        uri: config.get<string>('DATABASE_URI'),
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('DATABASE_URI'),
       }),
       inject: [ConfigService],
     }),
-    MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
-    ConfigModule.forRoot(),
+    UserModule,
     AuthModule,
   ],
-  controllers: [AuthController],
-  providers: [AuthService, JwtService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(LoggerMiddleware).forRoutes('*');
+  }
+}
