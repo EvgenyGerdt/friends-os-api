@@ -4,6 +4,10 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UserModule } from './modules/user/user.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { LoggerMiddleware } from './middleware/logger.middleware';
+import { FriendsModule } from './modules/friends/friends.module';
+import { AppGateway } from './app.gateway';
+import { SessionModule } from './modules/sessions/session.module';
+import { FriendsGateway } from './modules/friends/friends.gateway';
 
 @Module({
   imports: [
@@ -19,7 +23,10 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
     }),
     UserModule,
     AuthModule,
+    FriendsModule,
+    SessionModule,
   ],
+  providers: [AppGateway, FriendsGateway],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

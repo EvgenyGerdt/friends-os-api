@@ -17,6 +17,7 @@ export class UserService {
       id: user.id,
       email: user.email,
       personalData: user.personalData,
+      online: user.online,
     };
   }
 
@@ -41,5 +42,9 @@ export class UserService {
       personalData,
     });
     return createdUser.save();
+  }
+
+  async setOnlineStatus(id: string | string[], status: boolean): Promise<void> {
+    await this.userModel.findByIdAndUpdate(id, { online: status });
   }
 }

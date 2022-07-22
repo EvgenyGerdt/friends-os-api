@@ -77,6 +77,10 @@ export class AuthService {
     return { token: jwt };
   }
 
+  async resetPassword(password: string) {
+
+  }
+
   async verifyJwt(jwt: string): Promise<{ exp: number }> {
     try {
       const { exp } = await this.jwtService.verifyAsync(jwt);

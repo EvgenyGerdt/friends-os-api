@@ -1,4 +1,4 @@
-export class ExistingUserDTO {
+export interface ExistingUserDTO {
   email: string;
   password: string;
 }

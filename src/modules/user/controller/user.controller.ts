@@ -1,4 +1,11 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from '../service/user.service';
 import { UserDetails } from '../../../types/UserDetails.type';
 import { JwtGuard } from '../../auth/guard/jwt.guard';
@@ -9,6 +16,7 @@ export class UserController {
 
   @Get(':id')
   @UseGuards(JwtGuard)
+  @HttpCode(HttpStatus.OK)
   getUser(@Param('id') id: string): Promise<UserDetails | null> {
     return this.userService.findById(id);
   }

@@ -20,8 +20,11 @@ export class LoggerMiddleware implements NestMiddleware {
       this.logger[_logType](
         `${method} ${url} ${statusCode} ${contentLength} - ${userAgent} ${ip}`,
       );
+
       this.logger[_logType](
-        `${method} ${url} REQUEST: ${JSON.stringify(request.body)}`,
+        `${method} ${url} Request: ${
+          JSON.stringify(request.body) || ''
+        } with Params: ${JSON.stringify(request.params) || ''}`,
       );
     });
 
