@@ -7,7 +7,7 @@ import { LoggerMiddleware } from './middleware/logger.middleware';
 import { FriendsModule } from './modules/friends/friends.module';
 import { AppGateway } from './app.gateway';
 import { SessionModule } from './modules/sessions/session.module';
-import { FriendsGateway } from './modules/friends/friends.gateway';
+import { NotificationModule } from './modules/notification/notification.module';
 
 @Module({
   imports: [
@@ -25,8 +25,9 @@ import { FriendsGateway } from './modules/friends/friends.gateway';
     AuthModule,
     FriendsModule,
     SessionModule,
+    NotificationModule,
   ],
-  providers: [AppGateway, FriendsGateway],
+  providers: [AppGateway],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {

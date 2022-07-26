@@ -4,7 +4,6 @@ import { UserSchema } from '../user/user.schema';
 import { FriendsService } from './service/friends.service';
 import { FriendsController } from './controller/friends.controller';
 import { SessionSchema } from '../sessions/session.schema';
-import { FriendsGateway } from './friends.gateway';
 
 @Module({
   imports: [
@@ -14,7 +13,7 @@ import { FriendsGateway } from './friends.gateway';
     ]),
   ],
   controllers: [FriendsController],
-  providers: [FriendsService, FriendsGateway],
+  providers: [FriendsService],
   exports: [FriendsService],
 })
 export class FriendsModule {}

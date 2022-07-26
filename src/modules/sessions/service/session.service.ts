@@ -12,10 +12,24 @@ export class SessionService {
   ) {}
 
   async create(session: UserSession): Promise<void> {
+    const existedSession: UserSession = await this.findSessionByUserId(
+      session.userId,
+    );
+
+    if (existedSession) {
+      await this.delete(existedSession.sessionId);
+    }
+
     await this.sessionModel.create(session);
   }
 
   async delete(sessionId: any): Promise<SessionDocument> {
     return this.sessionModel.findOneAndDelete({ sessionId: sessionId }).exec();
+  }
+
+  async findSessionByUserId(
+    userId: string[] | string,
+  ): Promise<SessionDocument> {
+    return await this.sessionModel.findOne({ userId: userId }).exec();
   }
 }

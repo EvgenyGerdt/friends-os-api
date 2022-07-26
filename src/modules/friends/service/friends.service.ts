@@ -8,7 +8,6 @@ import { MessageResponse } from '../../../types/MessageResponse.type';
 import { UserDetails } from '../../../types/UserDetails.type';
 import { FriendList } from '../../../types/FriendList.type';
 import { SessionDocument } from '../../sessions/session.schema';
-import { FriendsGateway } from '../friends.gateway';
 
 @Injectable()
 export class FriendsService {
@@ -16,7 +15,6 @@ export class FriendsService {
     @InjectModel('User') private readonly userModel: Model<UserDocument>,
     @InjectModel('Session')
     private readonly sessionModel: Model<SessionDocument>,
-    private friendsGateway: FriendsGateway,
   ) {}
 
   _getUserDetails(user: UserDocument): UserDetails {
@@ -60,11 +58,6 @@ export class FriendsService {
       .exec();
 
     const session = await this.sessionModel.findOne({ id: request.to }).exec();
-
-    this.friendsGateway.sendRequestsInformation(
-      session.sessionId,
-      user.friendRequests,
-    );
 
     return { message: 'Success friend request' };
   }
